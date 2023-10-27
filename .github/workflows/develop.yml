@@ -1,0 +1,22 @@
+name: spendwise-develop-workflow
+
+on:
+  pull_request:
+    branches:
+      - develop
+
+jobs:
+  verify-application:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        name: Fazendo checkout no branch
+
+      - uses: actions/setup-java@v3
+        name: Configurando Java na máquina
+        with:
+          java-version: '17'
+          distribution: 'temurin'
+
+      - name: Executando verificações com o Maven
+        run: mvn clean test compile
