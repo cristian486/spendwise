@@ -14,6 +14,7 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
 import java.math.BigDecimal;
+import java.math.RoundingMode;
 import java.time.LocalDate;
 import java.time.Month;
 import java.time.YearMonth;
@@ -43,21 +44,20 @@ public class TransacaoService {
         return repository.findAllByUsuario(pageable, usuario).map(ListagemTransacaoDto::new);
     }
 
+    List<Transacao> listar(String usuario) {
+        return repository.findAllByUsuarioLikeIgnoreCase(usuario);
+    }
+
     public void atualizar(String id, AtualizarTransacaoDto atualizarTransacaoDto) {
         Transacao transacao = this.findTransacaoById(id);
         transacao.atualizar(atualizarTransacaoDto);
     }
 
     public OverviewTransacaoDto visaoGeral(String usuario) {
-        //LocalDate primeiroDoMesAtual = LocalDate.now().withDayOfMonth(1);
-        //LocalDate ultimoDoMesAtual = LocalDate.now().withDayOfMonth(YearMonth.now().atEndOfMonth().getDayOfMonth());
-        LocalDate primeiroDoMesAtual = LocalDate.of(2023, 9, 1);
-        LocalDate ultimoDoMesAtual = LocalDate.of(2023, 9, 30);
-        List<Transacao> transacoes = repository.visaoGeralDasTransacoesDoUsuario(usuario, primeiroDoMesAtual, ultimoDoMesAtual);
-
-        BigDecimal valorGanho = transacoes.stream().filter(t -> t.getTipo().equals(TipoTransacao.CREDITO)).map(Transacao::getValor).reduce(BigDecimal.ZERO, BigDecimal::add);
-        BigDecimal valorGasto = transacoes.stream().filter(t -> t.getTipo().equals(TipoTransacao.DEBITO)).map(Transacao::getValor).reduce(BigDecimal.ZERO, BigDecimal::add);
-        BigDecimal valorAtual = valorGanho.subtract(valorGasto);
-        return new OverviewTransacaoDto(valorAtual, valorGanho, valorGasto);
+        List<Transacao> transacoes = repository.findAllByUsuarioLikeIgnoreCase(usuario);
+        BigDecimal credito = transacoes.stream().filter(t -> t.getTipo().equals(TipoTransacao.CREDITO)).map(Transacao::getValor).reduce(BigDecimal.ZERO, BigDecimal::add);
+        BigDecimal debito = transacoes.stream().filter(t -> t.getTipo().equals(TipoTransacao.DEBITO)).map(Transacao::getValor).reduce(BigDecimal.ZERO, BigDecimal::add);
+        BigDecimal saldoAtual = credito.add(debito);
+        return new OverviewTransacaoDto(saldoAtual, credito, debito);
     }
 }
