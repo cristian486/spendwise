@@ -9,6 +9,7 @@ import jakarta.validation.Valid;
 import lombok.AllArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
 import org.springframework.data.web.PageableDefault;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -18,14 +19,13 @@ import org.springframework.web.bind.annotation.*;
 
 @RestController
 @RequestMapping("/transacoes")
-@CrossOrigin
 @AllArgsConstructor
 public class TransacaoController {
 
     private final TransacaoService service;
 
     @GetMapping
-    public ResponseEntity<Page<ListagemTransacaoDto>> listar(@PageableDefault(sort = "data", size = 15) Pageable pageable, @RequestParam(name = "usuario") String usuario) {
+    public ResponseEntity<Page<ListagemTransacaoDto>> listar(@PageableDefault(sort = "data", size = 15, direction = Sort.Direction.DESC) Pageable pageable, @RequestParam(name = "usuario") String usuario) {
         Page<ListagemTransacaoDto> listagem = service.listar(pageable, usuario);
         return ResponseEntity.status(HttpStatus.OK).body(listagem);
     }

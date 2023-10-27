@@ -24,6 +24,6 @@ public record CadastroTransacaoDto(@NotBlank(message = "Obrigatório o envio do 
                                    TipoTransacao tipo) {
 
     public Transacao toModel() {
-        return new Transacao(null, usuario, descricao, data, valor, categoria, tipo);
+        return new Transacao( usuario, descricao, data, valor, categoria, tipo);
     }
 }
