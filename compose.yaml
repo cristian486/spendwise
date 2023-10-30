@@ -40,6 +40,23 @@ services:
       database:
         condition: "service_healthy"
 
+  backend:
+    container_name: "backend"
+    image: "cristian486/spendwise"
+    ports:
+      - "8080:8080"
+    networks:
+      - "spendwisenet"
+    environment:
+      - "KEYCLOAK_URL=http://192.168.0.13:8585"
+      - "ISSUER_URI=http://192.168.0.13:8585/realms/spendwise"
+      - "JWK_URI=http://192.168.0.13:8585/realms/spendwise/protocol/openid-connect/certs"
+    extra_hosts:
+      - "host.docker.internal:host-gateway"
+    depends_on:
+      database:
+        condition: "service_healthy"
+
 volumes:
   spendwisedata:
     driver: 'local'

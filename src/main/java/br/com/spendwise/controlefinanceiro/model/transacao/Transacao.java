@@ -31,6 +31,15 @@ public class Transacao {
     @Enumerated(EnumType.STRING)
     private TipoTransacao tipo;
 
+    public Transacao(String usuario, String descricao, LocalDate data, BigDecimal valor, Categoria categoria, TipoTransacao tipo) {
+        this.usuario = usuario;
+        this.descricao = descricao;
+        this.data = data;
+        this.valor = tipo.equals(TipoTransacao.DEBITO) ? valor.negate() : valor;
+        this.categoria = categoria;
+        this.tipo = tipo;
+    }
+
     public void atualizar(AtualizarTransacaoDto atualizarTransacaoDto) {
         if(atualizarTransacaoDto.descricao() != null &&
                 !atualizarTransacaoDto.descricao().isBlank() && !this.descricao.equals(atualizarTransacaoDto.descricao())) {
