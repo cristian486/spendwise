@@ -30,6 +30,12 @@ public class TransacaoController {
         return ResponseEntity.status(HttpStatus.OK).body(listagem);
     }
 
+    @GetMapping("/grupo")
+    public ResponseEntity<Page<ListagemTransacaoDto>> listarTransacoesGrupo(@PageableDefault(sort = "data", size = 15, direction = Sort.Direction.DESC) Pageable pageable, @RequestParam(name = "grupoId") String grupoId) {
+        Page<ListagemTransacaoDto> listagem = service.listaTransacoesGrupo(pageable, grupoId);
+        return ResponseEntity.status(HttpStatus.OK).body(listagem);
+    }
+
     @GetMapping("/overview")
     public ResponseEntity<OverviewTransacaoDto> overview(@RequestParam(name = "usuario") String usuario) {
         OverviewTransacaoDto overview = service.visaoGeral(usuario);

@@ -14,10 +14,6 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
 import java.math.BigDecimal;
-import java.math.RoundingMode;
-import java.time.LocalDate;
-import java.time.Month;
-import java.time.YearMonth;
 import java.util.List;
 
 @Service
@@ -42,6 +38,10 @@ public class TransacaoService {
 
     public Page<ListagemTransacaoDto> listar(Pageable pageable, String usuario) {
         return repository.findAllByUsuario(pageable, usuario).map(ListagemTransacaoDto::new);
+    }
+
+    public Page<ListagemTransacaoDto> listaTransacoesGrupo(Pageable pageable, String usuario) {
+        return repository.findAllByGrupoId(pageable, usuario).map(ListagemTransacaoDto::new);
     }
 
     List<Transacao> listar(String usuario) {
