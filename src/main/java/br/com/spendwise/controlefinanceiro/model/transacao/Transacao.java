@@ -26,13 +26,15 @@ public class Transacao {
     private String descricao;
     private LocalDate data;
     private BigDecimal valor;
+    private String grupoId;
     @Enumerated(EnumType.STRING)
     private Categoria categoria;
     @Enumerated(EnumType.STRING)
     private TipoTransacao tipo;
 
-    public Transacao(String usuario, String descricao, LocalDate data, BigDecimal valor, Categoria categoria, TipoTransacao tipo) {
+    public Transacao(String usuario, String grupoId, String descricao, LocalDate data, BigDecimal valor, Categoria categoria, TipoTransacao tipo) {
         this.usuario = usuario;
+        this.grupoId = grupoId;
         this.descricao = descricao;
         this.data = data;
         this.valor = tipo.equals(TipoTransacao.DEBITO) ? valor.negate() : valor;
