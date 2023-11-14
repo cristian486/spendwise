@@ -53,7 +53,7 @@ public class GrupoService {
         grupo.adicionarIntegrante(integrante);
     }
 
-    public void adicionarAoGrupo(MovimentoGrupoDto movimentoGrupoDto) {
+    public void adicionarIntegrante(MovimentoGrupoDto movimentoGrupoDto) {
         Grupo grupo = this.findGrupoById(movimentoGrupoDto.grupoId());
         integranteService.cadastrar(grupo, movimentoGrupoDto.usuario());
     }

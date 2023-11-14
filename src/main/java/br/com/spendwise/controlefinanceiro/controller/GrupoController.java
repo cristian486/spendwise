@@ -43,7 +43,7 @@ public class GrupoController {
     @Transactional
     @PostMapping("/entrar")
     public ResponseEntity<?> entrarGrupo(@RequestBody @Valid MovimentoGrupoDto movimentoGrupoDto) {
-        service.adicionarAoGrupo(movimentoGrupoDto);
+        service.adicionarIntegrante(movimentoGrupoDto);
         return ResponseEntity.status(HttpStatus.OK).build();
     }
 }
