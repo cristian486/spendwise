@@ -37,7 +37,7 @@ public class TransacaoService {
     }
 
     public Page<ListagemTransacaoDto> listar(Pageable pageable, String usuario) {
-        return repository.findAllByUsuario(pageable, usuario).map(ListagemTransacaoDto::new);
+        return repository.findAllByUsuarioAndGrupoIdIsNull(pageable, usuario).map(ListagemTransacaoDto::new);
     }
 
     public Page<ListagemTransacaoDto> listaTransacoesGrupo(Pageable pageable, String usuario) {
