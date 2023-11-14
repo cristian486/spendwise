@@ -21,10 +21,9 @@ import java.util.Optional;
 @AllArgsConstructor
 public class GrupoService {
 
-    private final IntegranteService integranteService;
     private final GrupoRepository grupoRepository;
-
     private final TransacaoService transacaoService;
+    private final IntegranteService integranteService;
 
 
     Grupo findGrupoById(String id) {
@@ -33,21 +32,21 @@ public class GrupoService {
 
     public List<ListagemGrupoDto> listar(String usuario) {
         List<ListagemGrupoDto> listagem = new ArrayList<>();
-        Optional<Integrante> integrante = integranteService.findByUsuario(usuario);
-        integrante.ifPresent(integrant -> {
-            List<Grupo> grupos = grupoRepository.findAllByIntegrantesContains(integrant);
-            grupos.forEach(g -> {
-                List<Transacao> listar = transacaoService.listar(g.getId());
-                BigDecimal saldoDoGrupo = listar.stream().map(Transacao::getValor).reduce(BigDecimal.ZERO, BigDecimal::add);
-                listagem.add(new ListagemGrupoDto(g.getId(), g.getNome(), saldoDoGrupo));
-            });
+        Optional<Integrante> integranteOptional = integranteService.findByUsuario(usuario);
+
+        if(integranteOptional.isEmpty()) return listagem;
+
+        grupoRepository.findAllByIntegrantesContains(integranteOptional.get()).forEach(g -> {
+            List<Transacao> listar = transacaoService.listar(g.getId());
+            BigDecimal saldoDoGrupo = listar.stream().map(Transacao::getValor).reduce(BigDecimal.ZERO, BigDecimal::add);
+            listagem.add(new ListagemGrupoDto(g.getId(), g.getNome(), saldoDoGrupo));
         });
 
         return listagem;
     }
 
     public void cadastrar(CadastroGrupoDto dadosCadastro) {
-        Grupo grupo = new Grupo(null, dadosCadastro.nome(), dadosCadastro.dono(), dadosCadastro.usuario(), new ArrayList<>());
+        Grupo grupo = new Grupo(dadosCadastro.nome(), dadosCadastro.dono(), dadosCadastro.usuario());
         grupoRepository.save(grupo);
         Integrante integrante = integranteService.cadastrar(grupo, dadosCadastro.usuario());
         grupo.adicionarIntegrante(integrante);

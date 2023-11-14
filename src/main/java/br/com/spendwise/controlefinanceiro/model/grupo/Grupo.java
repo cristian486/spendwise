@@ -27,6 +27,12 @@ public class Grupo {
     @OneToMany(mappedBy = "grupo")
     List<Integrante> integrantes = new ArrayList<>();
 
+    public Grupo(String nome, String dono, String donoId) {
+        this.nome = nome;
+        this.dono = dono;
+        this.donoId = donoId;
+    }
+
     public void adicionarIntegrante(Integrante integrante) {
         this.integrantes.add(integrante);
     }

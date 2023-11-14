@@ -20,8 +20,8 @@ public class GraficoService {
 
     public List<DadosGraficoDebitosDto> graficoDasTransacoes(String usuario, TipoTransacao tipo) {
         List<DadosGraficoDebitosDto> result = new LinkedList<>();
-        List<Map<String, Object>> teste = repository.dadosGraficoTransacoes(usuario, tipo);
-        teste.forEach(map -> result.add(new DadosGraficoDebitosDto((Categoria) map.get("categoria"),  (BigDecimal) map.get("valor"))));
+        List<Map<String, Object>> resultado = repository.dadosGraficoTransacoes(usuario, tipo);
+        resultado.forEach(map -> result.add(new DadosGraficoDebitosDto((Categoria) map.get("categoria"),  (BigDecimal) map.get("valor"))));
         return result;
     }
 }

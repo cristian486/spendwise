@@ -21,43 +21,33 @@ import java.util.List;
 public class TransacaoService {
 
     private final TransacaoRepository repository;
+    private final ContaService contaService;
 
     Transacao findTransacaoById(String id) {
         return repository.findById(id).orElseThrow(() -> new EntityNotFoundException("A transação requisitada não foi encontrada!"));
-    }
-
-    public void cadastrar(CadastroTransacaoDto cadastroTransacaoDto) {
-        Transacao transacao = cadastroTransacaoDto.toModel();
-        repository.save(transacao);
-    }
-
-    public void deletar(String id) {
-        Transacao transacao = this.findTransacaoById(id);
-        repository.delete(transacao);
-    }
-
-    public Page<ListagemTransacaoDto> listar(Pageable pageable, String usuario) {
-        return repository.findAllByUsuario(pageable, usuario).map(ListagemTransacaoDto::new);
-    }
-
-    public Page<ListagemTransacaoDto> listaTransacoesGrupo(Pageable pageable, String usuario) {
-        return repository.findAllByGrupoId(pageable, usuario).map(ListagemTransacaoDto::new);
     }
 
     List<Transacao> listar(String usuario) {
         return repository.findAllByUsuarioLikeIgnoreCase(usuario);
     }
 
-    public void atualizar(String id, AtualizarTransacaoDto atualizarTransacaoDto) {
-        Transacao transacao = this.findTransacaoById(id);
-        transacao.atualizar(atualizarTransacaoDto);
+    public Page<ListagemTransacaoDto> listar(Pageable pageable, String usuario) {
+        return repository.findAllByUsuario(pageable, usuario).map(ListagemTransacaoDto::new);
     }
 
-    public OverviewTransacaoDto visaoGeral(String usuario) {
-        List<Transacao> transacoes = repository.findAllByUsuarioLikeIgnoreCase(usuario);
-        BigDecimal credito = transacoes.stream().filter(t -> t.getTipo().equals(TipoTransacao.CREDITO)).map(Transacao::getValor).reduce(BigDecimal.ZERO, BigDecimal::add);
-        BigDecimal debito = transacoes.stream().filter(t -> t.getTipo().equals(TipoTransacao.DEBITO)).map(Transacao::getValor).reduce(BigDecimal.ZERO, BigDecimal::add);
-        BigDecimal saldoAtual = credito.add(debito);
-        return new OverviewTransacaoDto(saldoAtual, credito, debito);
+    public Page<ListagemTransacaoDto> listaTransacoesGrupo(Pageable pageable, String grupoId) {
+        return repository.findAllByGrupoId(pageable, grupoId).map(ListagemTransacaoDto::new);
+    }
+
+    public void cadastrar(CadastroTransacaoDto cadastroTransacaoDto) {
+        Transacao transacao = cadastroTransacaoDto.toModel();
+        repository.save(transacao);
+        contaService.modificarSaldo(transacao.getUsuario(), transacao.getTipo(), transacao.getValor());
+    }
+
+    public void deletar(String id) {
+        Transacao transacao = this.findTransacaoById(id);
+        repository.delete(transacao);
+        contaService.modificarSaldo(transacao.getUsuario(), transacao.getTipo(), transacao.getValor());
     }
 }
