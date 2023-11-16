@@ -16,13 +16,13 @@ import java.util.Map;
 @Repository
 public interface TransacaoRepository extends JpaRepository<Transacao, String> {
 
-    Page<Transacao> findAllByUsuario(Pageable pageable, String usuario);
+    Page<Transacao> findAllByUsuarioAndGrupoIdIsNull(Pageable pageable, String usuario);
 
     Page<Transacao> findAllByGrupoId(Pageable pageable, String grupoId);
 
     List<Transacao> findAllByUsuarioLikeIgnoreCase(String usuario);
 
     @Cacheable(cacheNames = "gaficoTransacoes", key = "#usuario")
-    @Query("select t.categoria as categoria, sum(t.valor) as valor from Transacao t where t.usuario = :usuario and t.tipo = :tipo group by t.categoria")
+    @Query("select t.categoria as categoria, sum(t.valor) as valor from Transacao t where t.usuario = :usuario and t.tipo = :tipo and t.grupoId is null group by t.categoria")
     List<Map<String, Object>> dadosGraficoTransacoes(@Param("usuario") String usuario, TipoTransacao tipo);
 }

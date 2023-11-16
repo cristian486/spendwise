@@ -27,12 +27,12 @@ public class TransacaoService {
         return repository.findById(id).orElseThrow(() -> new EntityNotFoundException("A transação requisitada não foi encontrada!"));
     }
 
-    List<Transacao> listar(String usuario) {
-        return repository.findAllByUsuarioLikeIgnoreCase(usuario);
+    public Page<ListagemTransacaoDto> listar(Pageable pageable, String usuario) {
+        return repository.findAllByUsuarioAndGrupoIdIsNull(pageable, usuario).map(ListagemTransacaoDto::new);
     }
 
-    public Page<ListagemTransacaoDto> listar(Pageable pageable, String usuario) {
-        return repository.findAllByUsuario(pageable, usuario).map(ListagemTransacaoDto::new);
+    List<Transacao> listar(String usuario) {
+        return repository.findAllByUsuarioLikeIgnoreCase(usuario);
     }
 
     public Page<ListagemTransacaoDto> listaTransacoesGrupo(Pageable pageable, String grupoId) {
