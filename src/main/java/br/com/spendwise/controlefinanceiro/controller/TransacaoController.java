@@ -35,8 +35,6 @@ public class TransacaoController {
         return ResponseEntity.status(HttpStatus.OK).body(listagem);
     }
 
-
-
     @PostMapping
     @Transactional
     public ResponseEntity<?> cadastrar(@RequestBody @Valid CadastroTransacaoDto cadastroTransacaoDto) {

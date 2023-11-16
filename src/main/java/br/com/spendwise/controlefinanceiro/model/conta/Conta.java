@@ -19,9 +19,9 @@ public class Conta {
     @UuidGenerator
     private String id;
     private String usuario;
-    private BigDecimal saldoAtual;
-    private BigDecimal debito;
-    private BigDecimal credito;
+    private BigDecimal saldoAtual = BigDecimal.ZERO;
+    private BigDecimal debito = BigDecimal.ZERO;
+    private BigDecimal credito = BigDecimal.ZERO;
 
     public Conta(String usuario, BigDecimal saldoAtual, BigDecimal debito, BigDecimal credito) {
         this.usuario = usuario;

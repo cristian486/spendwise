@@ -41,28 +41,4 @@ public class Transacao {
         this.categoria = categoria;
         this.tipo = tipo;
     }
-
-    public void atualizar(AtualizarTransacaoDto atualizarTransacaoDto) {
-        if(atualizarTransacaoDto.descricao() != null &&
-                !atualizarTransacaoDto.descricao().isBlank() && !this.descricao.equals(atualizarTransacaoDto.descricao())) {
-            this.descricao = atualizarTransacaoDto.descricao();
-        }
-
-        if(atualizarTransacaoDto.data() != null && !this.data.equals(atualizarTransacaoDto.data())) {
-            this.data = atualizarTransacaoDto.data();
-        }
-
-        if(atualizarTransacaoDto.valor() != null && !this.valor.equals(atualizarTransacaoDto.valor())) {
-            this.valor = atualizarTransacaoDto.valor();
-        }
-
-        if(atualizarTransacaoDto.categoria() != null && !this.categoria.equals(atualizarTransacaoDto.categoria())) {
-            this.categoria = atualizarTransacaoDto.categoria();
-        }
-
-        if(atualizarTransacaoDto.tipo() != null && !this.tipo.equals(atualizarTransacaoDto.tipo())) {
-            this.tipo = atualizarTransacaoDto.tipo();
-        }
-
-    }
 }
